@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  web:
+    image: ${APP_IMAGE}
+    environment:
+      DEBUG: "${DEBUG}"
+      PYTHONUNBUFFERED: "${PYTHONUNBUFFERED}"
+      DB_ENGINE: "${DB_ENGINE}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      SECRET_KEY: "${SECRET_KEY}"
+      AD_DNS_NAME: "${AD_DNS_NAME}"
+      AD_LDAP_PORT: "${AD_LDAP_PORT}"
+      LDAP_AUTH_USE_TLS: "${LDAP_AUTH_USE_TLS}"
+      LDAP_AUTH_SEARCH_BASE: "${LDAP_AUTH_SEARCH_BASE}"
+      LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN: "${LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN}"
+    deploy:
+      labels:
+        - "traefik.frontend.rule=Host:${APP_HOST}"
+        - "traefik.port=8000"
+        - "traefik.enable=true"
+        - "traefik.tags=traefik-public"
+        - "traefik.docker.network=traefik-public"
+        - "traefik.webservice.frontend.entryPoints=http"
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - media:/usr/src/app/media
+    networks:
+      - traefik-public
+volumes:
+  media:
+    driver: nfs
+    driver_opts:
+      share: "${MEDIA_VOLUME_SHARE}"
+
+networks:
+  traefik-public:
+    external: true

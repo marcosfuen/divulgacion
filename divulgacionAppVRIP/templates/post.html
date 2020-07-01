@@ -1,0 +1,87 @@
+{% extends "index.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}
+  {{ detallePost.titulo }}
+{% endblock titulo %}
+
+{% block tituloPrincipal %}
+  {{ detallePost.titulo }}
+{% endblock tituloPrincipal %}
+
+{% block tituloSecundario %}
+  {{ detallePost.descripcion }}
+{% endblock tituloSecundario %}
+
+{% block imagen %}
+  {{ detallePost.imagen.url }}
+{% endblock imagen %}
+
+{% block contenido %}
+  {{ detallePost.contenido | safe }}
+  {% if messages %}
+      <!-- Push notification-->
+      <script src="{% static 'vendor/push-notification/push.js' %}"></script>
+      <script>
+        Push.create("Comentario adicionado con exito", {
+            body: "Sera visible su comentario después que el moderador lo apruebe",
+            icon: '{% static 'img/push-notification/push-notification.png' %}',
+            /*timeout: 4000,*/
+            onClick: function () {
+                window.focus();
+                this.close();
+            }
+        });               
+      </script>
+  {% endif %}
+  <br>
+  <form method="POST" >
+    {% csrf_token %}
+    {{ commentForm | crispy }}
+    <button type="submit" class="btn btn-primary  btn-lg">Comentar</button>
+  </form>
+  <br>
+  {% for commentrio in comment %}
+  <br>
+  <div class="post-preview">
+    <p class="post-meta">Enviado por
+      <span class="fa fa-user-alt"></span> <strong>{{ commentrio.nombre }}</strong> el
+      <span class="fa fa-calendar-alt"></span> {{ commentrio.fechaCreacion }}</p>
+       {{ commentrio.comentario | linebreaks }}
+       <button type="button" name="button" class="reply-btn btn btn-outline-dark btn-sm ml-2"><span class="fa fa-reply"></span> Respuesta</button>
+  </div>
+
+  <div class="reply-comments" style="display: none;">
+          {% for reply in commentrio.replies.all %}
+            {% if reply.estado %}
+            <br>
+                    <ul>
+                      <div class="post-preview">
+                        <p class="post-meta">Respuesta
+                          <span class="fa fa-user-alt"></span> <strong>{{ reply.nombre }}</strong> el
+                          <span class="fa fa-calendar-alt"></span> {{ reply.fechaCreacion }}</p>
+                          <small>{{ reply.comentario | linebreaks }}</small>
+                          <!-- <button id="boton1"  type="button" name="button" class="reply-btn btn btn-outline-dark btn-sm ml-2"><span class="fa fa-reply"></span> Respuesta</button> -->
+                      </div>
+                    </ul> 
+            {% endif %}     
+        {% endfor %}
+        <br>
+     
+        <form method="POST">
+          {% csrf_token %}
+          {{ commentForm | crispy }}
+          <input type="hidden" name="parent_id" value="{{ commentrio.id }}">
+          <button type="submit" class="btn btn-primary  btn-sm">Comentar Respuesta</button>
+        </form>               
+    <br>
+  </div>  
+  {% empty %}
+    <p>Se el primero en comentar :)</p>     
+  {% endfor %}
+{% endblock contenido %}
+
+{% block barraBusqueda %}
+{% endblock barraBusqueda %}
+

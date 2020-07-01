@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>{% block titulo %}Analizando - Universidad de Camagüey{% endblock titulo %}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/clean-blog.min.css' %}" rel="stylesheet">
+  <style>
+      .search-form .form-group {
+        float: right !important;
+        transition: all 0.35s, border-radius 0s;
+        width: 32px;
+        height: 32px;
+        background-color: #fff;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        border-radius: 25px;
+        border: 1px solid #ccc;
+      }
+      .search-form .form-group input.form-control {
+        padding-right: 20px;
+        border: 0 none;
+        background: transparent;
+        box-shadow: none;
+        display:block;
+      }
+      .search-form .form-group input.form-control::-webkit-input-placeholder {
+        display: none;
+      }
+      .search-form .form-group input.form-control:-moz-placeholder {
+        /* Firefox 18- */
+        display: none;
+      }
+      .search-form .form-group input.form-control::-moz-placeholder {
+        /* Firefox 19+ */
+        display: none;
+      }
+      .search-form .form-group input.form-control:-ms-input-placeholder {
+        display: none;
+      }
+      .search-form .form-group:hover,
+      .search-form .form-group.hover {
+        width: 100%;
+        border-radius: 4px 25px 25px 4px;
+      }
+      .search-form .form-group span.form-control-feedback {
+        position: absolute;
+        top: -1px;
+        right: -2px;
+        z-index: 2;
+        display: block;
+        width: 65px;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
+        color: #3596e0;
+        left: initial;
+        font-size: 14px;
+      }
+      
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'appVrip:index' %}">Analizando</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'appVrip:index' %}">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'appVrip:generales' %}">General</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'appVrip:index' %}">Proyecto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'appVrip:index' %}">Metodólogos</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="{% url 'appVrip:index' %}">Categoria 3</a>
+          </li> -->
+        </ul>
+        {% block barraBusqueda %}
+            <div class="row">
+                <div class="col-md-12 col-md-offset-3">
+                    <form action="" class="search-form">
+                        <div class="form-group has-feedback">
+                          <label for="search" class="sr-only">Search</label>
+                          <input type="text" class="form-control" name="buscar" id="search" placeholder="Buscar..." value="{{ request.GET.buscar }}">
+                          <span class="fa fa-search form-control-feedback"></span>
+                        </div>
+                    </form>
+                </div>
+        {% endblock barraBusqueda %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({% block imagen %}{% static 'img/home-bg.jpg' %}{% endblock imagen %})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>{% block tituloPrincipal %}VRIP{% endblock tituloPrincipal %}</h1>
+            <span class="subheading">{% block tituloSecundario %}Temas a debatir en Vicerectoría de Investigación y Postgrado{% endblock tituloSecundario %}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        {% block contenido %}
+        {% if posts %}
+          {% for post in posts %}
+            <div class="post-preview">
+              <a href="{% url 'appVrip:detallesPost' post.slug %}">
+                <h2 class="post-title">
+                  {{ post.titulo }}
+                </h2>
+                <h3 class="post-subtitle">
+                    {{ post.descripcion }}
+                </h3>
+              </a>
+              <p class="post-meta">Escrito por
+                <span class="fa fa-user-alt"></span> <strong>{{ post.autor }}</strong> el
+                <span class="fa fa-calendar-alt"></span> {{ post.fechaCreacion }}</p>
+            </div>
+            {% for tema1, count1, tema2, count2, count in comentariosPorTemas %}
+                {% if post.titulo == tema1 %}
+                  <a href="{% url 'appVrip:detallesPost' post.slug %}">
+                    <span class="fa fa-comments"></span> {{ count }} Comentarios
+                  </a>  
+                {% endif %}  
+            {% endfor %}
+            <hr>
+          {% endfor %}  
+        {% else %}
+        <h1>No existen temas registrados! </h1>
+        {% endif %}
+        {% endblock contenido %}
+        <!-- Pager -->
+        {% if posts.has_previous %}
+          <div class="clearfix">
+            <a class="btn btn-primary float-left" href="?page={{ posts.previous_page_number }}">&larr; Anterior</a>
+          </div>
+        {% endif %}
+        {% if posts.has_next %}
+          <div class="clearfix">
+            <a class="btn btn-primary float-right" href="?page={{ posts.next_page_number }}">Siguiente &rarr;</a>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://twitter.com/uc_camaguey">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://es-la.facebook.com/universidad.camaguey/">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://www.instagram.com/uc_cuba/">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Universidad de Camagüey <br>Ignacio Agramonte Loynaz <br>Dirección de Informatización 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="{% static 'js/clean-blog.min.js' %}"></script>
+
+  <!-- Push notification-->
+  <script src="{% static 'vendor/push-notification/push.js' %}"></script>
+  <script src="{% static 'js/comments.js' %}"></script>
+
+</body>
+
+</html>

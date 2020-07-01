@@ -1,0 +1,6 @@
+@@ -0,0 +1,5 @@ 
+# Ignorar repositorio Git
+.git
+
+# Ignorar ficheros con variables de entorno
+.env
