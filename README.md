@@ -1,6 +1,6 @@
 # Divulgación
 
-_Aplicación web para la discusión de documentos previo a una reunion_
+_Aplicación web para la discusión de documentos previo a una reunión_
 
 ## Comenzando 🚀
 
